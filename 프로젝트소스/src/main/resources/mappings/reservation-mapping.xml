@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="RsvDAO">
+	<resultMap id="rsvResult" type="rsv">
+		<id property='rsv_id' column='rsv_id' />
+		<result property="rsv_intime" column='rsv_intime' />
+		<result property="rsv_outtime" column='rsv_outtime' />
+		<result property="rsv_price" column='rsv_price' />
+		<association property="parking_id" column="parking_id"
+			resultMap="parkingResult"/>
+	</resultMap>
+	<resultMap id="parkingResult" type="parking">
+		<result property="parking_id" column="parking_id" />
+		<result property="parking_title" column='parking_title' />
+		<result property="parking_price" column='parking_price' />
+	</resultMap>
+	<insert id="insertRsv">
+		<![CDATA[
+		INSERT INTO reservation (parker_id, parking_id,
+		rsv_price, rsv_intime,
+		rsv_outtime, rsv_datetime, rsv_states) values
+		(18457, 35254, 2500,
+		'2021-04-03 11:00:00', '2021-04-06
+		10:00:00','2021-03-13 17:22:00',
+		0);]]>
+	</insert>
+	<update id="updateRsv">
+		<![CDATA[
+		UPDATE reservation SET rsv_states = #{rsv_states}
+		WHERE rsv_id=#{rsv_id}]]>
+	</update>
+	<delete id="deleteRsv">
+		<![CDATA[
+		DELETE FROM reservation WHERE rsv_id = #{rsv_id}
+		]]>
+	</delete>
+	<select id="getRsv" resultMap="rsvResult">
+		<![CDATA[
+		SELECT rsv_id, rsv_intime, rsv_outtime, rsv_price, parking_id, parking_title, parking_price
+		FROM reservation JOIN parkingboard USING (parking_id)
+		WHERE rsv_id =#{rsv_id}]]>
+	</select>
+
+	<select id="getRsvList" resultType="rsv">
+		<![CDATA[
+		SELECT * FROM reservation]]>
+	</select>
+</mapper>
